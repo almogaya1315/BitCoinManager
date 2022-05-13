@@ -1,4 +1,6 @@
 ﻿using BitCoinManager.Models;
+using BitCoinManager.Services;
+using BitCoinManagerModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -9,18 +11,20 @@ using System.Threading.Tasks;
 
 namespace BitCoinManager.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : ControllerBase
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
+        public HomeController(GlobalizationHandler global, ILogger<HomeController> logger, BitCoinRepository repository, SessionHandler session)
+            : base(global, logger, repository, session) { }
 
         public IActionResult Index()
         {
-            return View();
+            BitCoinUser user = null;
+            if (_session.GetUser(out user))
+            {
+
+            }
+
+            return View(user);
         }
 
         public IActionResult Privacy()

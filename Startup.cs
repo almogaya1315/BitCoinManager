@@ -1,5 +1,7 @@
+using BitCoinManager.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +26,28 @@ namespace BitCoinManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(300);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
+            services.AddHttpContextAccessor();
+
+            var url = "https://localhost:44343";
+            //var BitCoinRepoClient = new BitCoinRepositoryClient(url, new System.Net.Http.HttpClient());
+            var global = new GlobalizationHandler();
+            services.AddSingleton(typeof(GlobalizationHandler), global);
+            //services.AddSingleton(typeof(BitCoinRepositoryClient), BitCoinRepoClient);
+            services.AddSingleton(typeof(BitCoinRepository), new BitCoinRepository(global)); //, BitCoinRepoClient));
+            //services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            //services.AddSingleton<ISessionHandler, SessionHandler>();
+            services.AddSingleton(typeof(SessionHandler), new SessionHandler(new HttpContextAccessor()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,6 +69,8 @@ namespace BitCoinManager
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
