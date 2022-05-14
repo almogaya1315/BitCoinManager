@@ -16,40 +16,42 @@
 
         @using (Html.BeginForm("Login", "UserIdentity", Model, FormMethod.Post))
         {
-                @Html.ValidationSummary()
-                @ViewData["Mesasge_Login"]
+@Html.ValidationSummary()
 
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        @Html.TextBoxFor(u => Model.Email, new
-                                        {
-                                            @class = "form-control input-lg",
-                                            @style = "max-width:100%",
-                                            @placeholder = "Email",
-                                            @title = "Email",
-                                            @required = "required",
-                                            @autofocus = "autofocus"
-                                        })
-                                        @Html.ValidationMessageFor(u => Model.Email)
-                                        @ViewData["Message_Email"]
-                                    </div>
-                                    <div class="form-group">
-                                        @Html.PasswordFor(u => Model.Password, new
-                                        {
-                                            @class = "form-control input-lg",
-                                            @style = "max-width:100%",
-                                            @placeholder = "Password",
-                                            @title = "Password",
-                                            @required = "required"
-                                        })
-                                        @Html.ValidationMessageFor(u => Model.Password)
-                                        @ViewData["Message_Password"]
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="submit" class="btn btn-block btn-lg btn-primary" style="max-width:100%" value="Login" />
-                                        @Html.ActionLink("Create User", "CreateUser", "UserIdentity", Model, new { @style = "margin-right:50%" })
-                                        @*<span><a href="#">Forgot Password</a></span>*@
-                                    </div>
-                                </div>}
+
+                <div class="modal-body">
+                    <div class="form-group">
+                        @Html.TextBoxFor(u => Model.Email, new
+                        {
+                            @class = "form-control input-lg",
+                            @style = "max-width:100%",
+                            @placeholder = "Email",
+                            @title = "Email",
+                            @required = "required",
+                            @autofocus = "autofocus"
+                        })
+                        @Html.ValidationMessageFor(u => Model.Email)
+                        @ViewData["Message_Email"]
+                    </div>
+                    <div class="form-group">
+                        @Html.PasswordFor(u => Model.Password, new
+                        {
+                            @class = "form-control input-lg",
+                            @style = "max-width:100%",
+                            @placeholder = "Password",
+                            @title = "Password",
+                            @required = "required"
+                        })
+                        @Html.ValidationMessageFor(u => Model.Password)
+                        @ViewData["Message_Password"]
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-block btn-lg btn-primary" style="max-width:100%" value="Login" />
+                        @Html.ActionLink("Create User", "CreateUser", "UserIdentity", Model, new { @style = "margin-right:50%" })
+                        @*<span><a href="#">Forgot Password</a></span>*@
+                    </div>
+
+                    @ViewData["Mesasge_Login"]
+                </div>}
     </div>
 </div>

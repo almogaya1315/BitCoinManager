@@ -15,21 +15,21 @@ namespace BitCoinManager.Services
             _repositoryClient = repositoryClient;
         }
 
-        public async Task<bool> ValidateLogin(User user)
+        public bool ValidateLogin(User user)
         {
-            user = await _repositoryClient.GetuserAsync(user);
+            user = Task.Run(async () => await _repositoryClient.GetuserAsync(user, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
             return user.Id > 0;
         }
 
-        public async Task<int> CreateUser(User user)
+        public int CreateUser(User user)
         {
-            user.Id = await _repositoryClient.CreateuserAsync(user);
+            user.Id =Task.Run(async () => await _repositoryClient.CreateuserAsync(user, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
             return user.Id;
         }
 
-        public async Task<int> CreateOrder(int userId, Order order)
+        public int CreateOrder(int userId, Order order)
         {
-            order.Id = await _repositoryClient.CreateorderAsync(userId, order);
+            order.Id = Task.Run(async () => await _repositoryClient.CreateorderAsync(userId, order, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
             return order.Id;
         }
     }

@@ -39,7 +39,7 @@ namespace BitCoinManager
 
             services.AddHttpContextAccessor();
 
-            var url = "https://localhost:44343";
+            var url = "https://localhost:44308";
             var BitCoinRepoClient = new BitCoinRepositoryApiClient(url, new System.Net.Http.HttpClient());
             services.AddSingleton(typeof(BitCoinRepositoryApiClient), BitCoinRepoClient);
             services.AddSingleton(typeof(BitCoinRepository), new BitCoinRepository(BitCoinRepoClient)); 

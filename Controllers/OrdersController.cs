@@ -27,7 +27,7 @@ namespace BitCoinManager.Controllers
 
             try
             {
-                _repository.CreateOrder(userVm.Model.Id, orderVm.Model).ContinueWith(t => orderVm.Model.Id = t.Result);
+                orderVm.Model.Id = _repository.CreateOrder(userVm.Model.Id, orderVm.Model);
                 userVm.Orders.Add(orderVm);
                 _session.SetUserInCookies(JsonConvert.SerializeObject(orderVm.Model));
             }

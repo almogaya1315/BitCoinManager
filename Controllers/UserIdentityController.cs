@@ -28,7 +28,7 @@ namespace BitCoinManager.Controllers
                 {
                     if (!string.IsNullOrWhiteSpace(user.Email) && !string.IsNullOrWhiteSpace(user.Password))
                     {
-                        _repository.ValidateLogin(user).ContinueWith(t => loginAttempValid = t.Result);
+                        loginAttempValid = _repository.ValidateLogin(user);
                         if (!loginAttempValid)
                         {
                             ViewData.Add("Mesasge_Login", "Login attemp failed. EmaiL OR Password INCORRECT.");
@@ -77,7 +77,6 @@ namespace BitCoinManager.Controllers
                         var passChars = user.Password.ToList();
                         var hasAtleastOneNumber = false;
                         var hasAtleastOneLetter = false;
-                        var hasAtleastOneSymbol = false;
                         var hasAtleastEightChars = passChars.Count >= 8;
                         foreach (var c in passChars)
                         {
@@ -91,23 +90,19 @@ namespace BitCoinManager.Controllers
                                 hasAtleastOneLetter = true;
                                 continue;
                             }
-                            if (Char.IsSymbol(c))
-                            {
-                                hasAtleastOneSymbol = true;
-                                continue;
-                            }
                         }
 
-                        if (!hasAtleastOneNumber || !hasAtleastOneLetter || !hasAtleastOneSymbol || !hasAtleastEightChars)
+                        if (!hasAtleastOneNumber || !hasAtleastOneLetter || !hasAtleastEightChars)
                         {
-                            ViewData.Add("Message_Password", "Password must have atleast 8 charcters, which contain numbers, letters & symbols.");
+                            ViewData.Add("Message_Password", "Password must have atleast 8 charcters, which contain numbers & letters.");
                         }
                     }
 
                     creationAttempValid = string.IsNullOrWhiteSpace((string)ViewData["Message_Email"]) &&
                                           string.IsNullOrWhiteSpace((string)ViewData["Message_Password"]);
 
-                    _repository.CreateUser(user).ContinueWith(t => user.Id = t.Result);
+                    if (creationAttempValid)
+                        user.Id = _repository.CreateUser(user);
                 }
 
                 if (creationAttempValid)
