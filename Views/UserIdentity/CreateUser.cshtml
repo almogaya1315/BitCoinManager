@@ -1,0 +1,50 @@
+﻿@model UserViewModel
+
+
+@{ Layout = "~/Views/Shared/Login_Layout.cshtml"; }
+
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="text-center" style="text-shadow:5px 5px 8px #000">BitCoin Manager</h1>
+        </div>
+
+        @using (Html.BeginForm("CreateUser", "UserIdentity", Model, FormMethod.Post))
+        {
+    @Html.ValidationSummary()
+                    @ViewData["Mesasge_Login"]
+
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(u => Model.Email, new
+                                            {
+                                                @class = "form-control input-lg",
+                                                @style = "max-width:100%",
+                                                @placeholder = "Email",
+                                                @title = "Email",
+                                                @required = "required",
+                                                @autofocus = "autofocus"
+                                            })
+                                            @Html.ValidationMessageFor(u => Model.Email)
+                                            @ViewData["Message_Email"]
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.PasswordFor(u => Model.Password, new
+                                            {
+                                                @class = "form-control input-lg",
+                                                @style = "max-width:100%",
+                                                @placeholder = "Password",
+                                                @title = "Password",
+                                                @required = "required"
+                                            })
+                                            @Html.ValidationMessageFor(u => Model.Password)
+                                            @ViewData["Message_Password"]
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" class="btn btn-block btn-lg btn-primary" style="max-width:100%" value="Create User" />
+                                            @Html.ActionLink("Login", "Login", "UserIdentity", Model, new { @style = "margin-right:50%" })
+                                            @*<span><a href="#">Forgot Password</a></span>*@
+                                        </div>
+                                    </div>}
+    </div>
+</div>

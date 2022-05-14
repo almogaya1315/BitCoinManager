@@ -1,4 +1,5 @@
-﻿using BitCoinManagerModels;
+﻿using BitCoinManager.Models;
+using BitCoinManagerModels;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -13,8 +14,8 @@ namespace BitCoinManager.Services
         T Get<T>(SessionKey key) where T : new();
         void Set(SessionKey key, object obj);
 
-        bool GetUser(out BitCoinUser user);
-        void SetUser(string user);
+        bool GetUserFromCookies(out UserViewModel user);
+        void SetUserInCookies(string user);
     }
 
     public class SessionHandler : ISessionHandler
@@ -46,13 +47,14 @@ namespace BitCoinManager.Services
             _contextAccessor.HttpContext.Session.SetString(key.ToString(), JsonConvert.SerializeObject(obj));
         }
 
-        public bool GetUser(out BitCoinUser user) 
+        public bool GetUserFromCookies(out UserViewModel userVm)
         {
-            user = JsonConvert.DeserializeObject<BitCoinUser>(JsonValue("user") ?? string.Empty);
-            return user != null;
+            var userModel = JsonConvert.DeserializeObject<User>(JsonValue("user") ?? string.Empty);
+            userVm = userModel != null ? new UserViewModel(userModel) : null;
+            return userVm != null;
         }
 
-        public void SetUser(string user)
+        public void SetUserInCookies(string user)
         {
             _contextAccessor.HttpContext.Request.Cookies.Append(new KeyValuePair<string, string>("user", user));
         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BitCoinManagerModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,11 @@ namespace BitCoinManager.Services
         {
             _global = global;
             //_repositoryClient = repositoryClient;
+        }
+
+        public bool ValidateLogin(User user)
+        {
+            return true;
         }
     }
 }

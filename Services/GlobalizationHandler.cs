@@ -8,6 +8,6 @@ namespace BitCoinManager.Services
 {
     public class GlobalizationHandler
     {
-        List<BitCoinUser> Users { get; set; }
+        List<User> Users { get; set; }
     }
 }

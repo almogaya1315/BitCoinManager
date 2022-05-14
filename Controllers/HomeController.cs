@@ -17,14 +17,14 @@ namespace BitCoinManager.Controllers
             : base(global, logger, repository, session) { }
 
         public IActionResult Index()
-        {
-            BitCoinUser user = null;
-            if (_session.GetUser(out user))
+         {
+            UserViewModel userVm = null;
+            if (_session.GetUserFromCookies(out userVm))
             {
-
+                return RedirectToAction("MainMenu", "Orders", userVm);
             }
 
-            return View(user);
+            return RedirectToAction("Login", "UserIdentity", userVm);
         }
 
         public IActionResult Privacy()
