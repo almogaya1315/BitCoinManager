@@ -1,4 +1,5 @@
-﻿using BitCoinManager.Services;
+﻿using BitCoinManager.Models;
+using BitCoinManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -13,9 +14,9 @@ namespace BitCoinManager.Controllers
         public OrdersController(GlobalizationHandler global, ILogger<HomeController> logger, BitCoinRepository repository, SessionHandler session)
             : base(global, logger, repository, session) { }
 
-        public IActionResult Index()
+        public IActionResult MainMenu(UserViewModel userVm)
         {
-            return View();
+            return View(userVm);
         }
     }
 }

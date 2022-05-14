@@ -3,6 +3,7 @@ using BitCoinManager.Services;
 using BitCoinManagerModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,10 @@ namespace BitCoinManager.Controllers
                     {
                         ViewData.Add("Mesasge_Login", "Login attemp failed. EmaiL OR Password INCORRECT.");
                     }
+                    else
+                    {
+                        _session.SetUserInCookies(JsonConvert.SerializeObject(user));
+                    }
                 }
                 else
                 {
@@ -47,55 +52,67 @@ namespace BitCoinManager.Controllers
 
         public IActionResult CreateUser(UserViewModel userVm)
         {
-            var user = userVm.Model;
-            var creationAttempValid = false;
-
-            if (!userVm.Init)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(user.Email))
+                var user = userVm.Model;
+                var creationAttempValid = false;
+
+                if (!userVm.Init)
                 {
-                    if (!Regex.IsMatch(user.Email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"))
-                        ViewData.Add("Message_Email", "Email not in correct format");
-                }
-                if (!string.IsNullOrWhiteSpace(user.Password))
-                {
-                    var passChars = user.Password.ToList();
-                    var hasAtleastOneNumber = false;
-                    var hasAtleastOneLetter = false;
-                    var hasAtleastOneSymbol = false;
-                    var hasAtleastEightChars = passChars.Count >= 8;
-                    foreach (var c in passChars)
+                    if (!string.IsNullOrWhiteSpace(user.Email))
                     {
-                        if (Char.IsNumber(c))
+                        if (!Regex.IsMatch(user.Email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"))
+                            ViewData.Add("Message_Email", "Email not in correct format");
+                    }
+                    if (!string.IsNullOrWhiteSpace(user.Password))
+                    {
+                        var passChars = user.Password.ToList();
+                        var hasAtleastOneNumber = false;
+                        var hasAtleastOneLetter = false;
+                        var hasAtleastOneSymbol = false;
+                        var hasAtleastEightChars = passChars.Count >= 8;
+                        foreach (var c in passChars)
                         {
-                            hasAtleastOneNumber = true;
-                            continue;
+                            if (Char.IsNumber(c))
+                            {
+                                hasAtleastOneNumber = true;
+                                continue;
+                            }
+                            if (Char.IsLetter(c))
+                            {
+                                hasAtleastOneLetter = true;
+                                continue;
+                            }
+                            if (Char.IsSymbol(c))
+                            {
+                                hasAtleastOneSymbol = true;
+                                continue;
+                            }
                         }
-                        if (Char.IsLetter(c))
+
+                        if (!hasAtleastOneNumber || !hasAtleastOneLetter || !hasAtleastOneSymbol || !hasAtleastEightChars)
                         {
-                            hasAtleastOneLetter = true;
-                            continue;
-                        }
-                        if (Char.IsSymbol(c))
-                        {
-                            hasAtleastOneSymbol = true;
-                            continue;
+                            ViewData.Add("Message_Password", "Password must have atleast 8 charcters, which contain numbers, letters & symbols.");
                         }
                     }
 
-                    if (!hasAtleastOneNumber || !hasAtleastOneLetter || !hasAtleastOneSymbol || !hasAtleastEightChars)
-                    {
-                        ViewData.Add("Message_Password", "Password must have atleast 8 charcters, which contain numbers, letters & symbols.");
-                    }
+                    creationAttempValid = string.IsNullOrWhiteSpace((string)ViewData["Message_Email"]) &&
+                                          string.IsNullOrWhiteSpace((string)ViewData["Message_Password"]);
+
+                    user.Id = _repository.CreateUser(user);
                 }
 
-                creationAttempValid = string.IsNullOrWhiteSpace((string)ViewData["Message_Email"]) && 
-                                      string.IsNullOrWhiteSpace((string)ViewData["Message_Password"]);
+                if (creationAttempValid)
+                    return RedirectToAction("MainMenu", "Orders", userVm);
+
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error in 'CreateUser'. {e.Message}");
+                ViewData.Add("Mesasge_Login", "Error in user creation.");
             }
 
-            if (creationAttempValid)
-                return RedirectToAction("MainMenu", "Orders", userVm);
-            else return View(userVm);
+            return View(userVm);
         }
     }
 }

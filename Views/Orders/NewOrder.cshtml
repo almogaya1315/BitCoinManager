@@ -1,0 +1,23 @@
+﻿@model OrderViewModel
+
+@using (@Html.BeginForm("CreateOrder", "Orders", FormMethod.Post))
+{
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => Model.Model.Id)
+        </td>
+        <td>
+            @Html.TextBoxFor(modelItem => Model.Amount)
+            @*@Html.ValidationMessageFor(modelItem => Model.Amount)*@
+        </td>
+        <td>
+            @Html.TextBoxFor(modelItem => Model.Price)
+        </td>
+        <td>
+            @Html.TextBoxFor(modelItem => Model.Operation)
+        </td>
+        <td>
+            <input type="submit" value="Create Order" />
+        </td>
+    </tr>
+}

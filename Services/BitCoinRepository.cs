@@ -21,5 +21,12 @@ namespace BitCoinManager.Services
         {
             return true;
         }
+
+        public int CreateUser(User user)
+        {
+            user.Id = 12345;
+
+            return user.Id;
+        }
     }
 }
