@@ -8,25 +8,29 @@ namespace BitCoinManager.Services
 {
     public class BitCoinRepository
     {
-        private readonly GlobalizationHandler _global;
-        //private readonly BitCoinRepositoryClient _repositoryClient;
+        private readonly BitCoinRepositoryApiClient _repositoryClient;
 
-        public BitCoinRepository(GlobalizationHandler global) //, BitCoinRepositoryClient repositoryClient)
+        public BitCoinRepository(BitCoinRepositoryApiClient repositoryClient)
         {
-            _global = global;
-            //_repositoryClient = repositoryClient;
+            _repositoryClient = repositoryClient;
         }
 
-        public bool ValidateLogin(User user)
+        public async Task<bool> ValidateLogin(User user)
         {
-            return true;
+            user = await _repositoryClient.GetuserAsync(user);
+            return user.Id > 0;
         }
 
-        public int CreateUser(User user)
+        public async Task<int> CreateUser(User user)
         {
-            user.Id = 12345;
-
+            user.Id = await _repositoryClient.CreateuserAsync(user);
             return user.Id;
+        }
+
+        public async Task<int> CreateOrder(int userId, Order order)
+        {
+            order.Id = await _repositoryClient.CreateorderAsync(userId, order);
+            return order.Id;
         }
     }
 }

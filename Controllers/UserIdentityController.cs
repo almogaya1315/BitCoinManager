@@ -14,37 +14,45 @@ namespace BitCoinManager.Controllers
 {
     public class UserIdentityController : ControllerBase
     {
-        public UserIdentityController(GlobalizationHandler global, ILogger<HomeController> logger, BitCoinRepository repository, SessionHandler session)
-            : base(global, logger, repository, session) { }
+        public UserIdentityController(ILogger<HomeController> logger, BitCoinRepository repository, SessionHandler session)
+            : base(logger, repository, session) { }
 
         public IActionResult Login(UserViewModel userVm)
         {
-            var user = userVm.Model;
-            var loginAttempValid = false;
-
-            if (!userVm.Init)
+            try
             {
-                if (!string.IsNullOrWhiteSpace(user.Email) && !string.IsNullOrWhiteSpace(user.Password))
+                var user = userVm.Model;
+                var loginAttempValid = false;
+
+                if (!userVm.Init)
                 {
-                    loginAttempValid = _repository.ValidateLogin(user);
-                    if (!loginAttempValid)
+                    if (!string.IsNullOrWhiteSpace(user.Email) && !string.IsNullOrWhiteSpace(user.Password))
                     {
-                        ViewData.Add("Mesasge_Login", "Login attemp failed. EmaiL OR Password INCORRECT.");
+                        _repository.ValidateLogin(user).ContinueWith(t => loginAttempValid = t.Result);
+                        if (!loginAttempValid)
+                        {
+                            ViewData.Add("Mesasge_Login", "Login attemp failed. EmaiL OR Password INCORRECT.");
+                        }
+                        else
+                        {
+                            _session.SetUserInCookies(JsonConvert.SerializeObject(user));
+                        }
                     }
                     else
                     {
-                        _session.SetUserInCookies(JsonConvert.SerializeObject(user));
+                        ViewData.Add("Mesasge_Login", "Login attemp failed. EmaiL OR Password EMPTY.");
                     }
                 }
-                else
+
+                if (!loginAttempValid)
                 {
-                    ViewData.Add("Mesasge_Login", "Login attemp failed. EmaiL OR Password EMPTY.");
+                    return View(userVm);
                 }
             }
-
-            if (!loginAttempValid)
+            catch (Exception e)
             {
-                return View(userVm);
+                _logger.LogError(e, $"Error in 'Login'. {e.Message}");
+                ViewData.Add("Mesasge_Login", "Error in user login.");
             }
 
             return RedirectToAction("MainMenu", "Orders", userVm);
@@ -99,7 +107,7 @@ namespace BitCoinManager.Controllers
                     creationAttempValid = string.IsNullOrWhiteSpace((string)ViewData["Message_Email"]) &&
                                           string.IsNullOrWhiteSpace((string)ViewData["Message_Password"]);
 
-                    user.Id = _repository.CreateUser(user);
+                    _repository.CreateUser(user).ContinueWith(t => user.Id = t.Result);
                 }
 
                 if (creationAttempValid)

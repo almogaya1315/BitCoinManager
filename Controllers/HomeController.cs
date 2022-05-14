@@ -13,8 +13,8 @@ namespace BitCoinManager.Controllers
 {
     public class HomeController : ControllerBase
     {
-        public HomeController(GlobalizationHandler global, ILogger<HomeController> logger, BitCoinRepository repository, SessionHandler session)
-            : base(global, logger, repository, session) { }
+        public HomeController(ILogger<HomeController> logger, BitCoinRepository repository, SessionHandler session)
+            : base(logger, repository, session) { }
 
         public IActionResult Index()
          {

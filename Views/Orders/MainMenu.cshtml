@@ -26,33 +26,20 @@
     <tbody>
         @foreach (var item in Model.Orders)
         {
-
-            @using (Html.BeginForm("", "", FormMethod.Post))
-            {
-                <tr>
-                    <td>
-                        @Html.TextBoxFor(modelItem => item.Model.Id, new { @id = "Id-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(modelItem => item.Amount, new { @id = "amount-" + item.Amount + "-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(modelItem => item.Price, new { @id = "lastName-" + item.Price + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
-                    </td>
-                    <td>
-                        @Html.TextBoxFor(modelItem => item.Operation, new { @id = "hebrewName-" + item.Operation + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
-                    </td>
-                    <td>
-                        @Html.ActionLink("Delete", "Delete", "Orders",
-                             new { id = item.Model.Id },
-                             new { onclick = $"return confirm('Are you sure you want to delete order number {item.Model.Id} ?')" })
-
-                        @Html.ActionLink("| Update", "Update", "Orders", new { id = item.Model.Id }, new { @id = "update-" + item.Model.Id, @style = "display: none" })
-                    </td>
-                </tr>
-
-
-            }
+            <tr>
+                <td>
+                    @Html.TextBoxFor(modelItem => item.Model.Id, new { @id = "id-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(modelItem => item.Amount, new { @id = "amount-" + item.Amount + "-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(modelItem => item.Price, new { @id = "price-" + item.Price + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
+                </td>
+                <td>
+                    @Html.TextBoxFor(modelItem => item.Operation, new { @id = "operation-" + item.Operation + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
+                </td>
+            </tr>
         }
 
         @{ await Html.RenderPartialAsync("NewOrder", new OrderViewModel()); }
