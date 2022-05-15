@@ -14,10 +14,12 @@
             @Html.TextBoxFor(modelItem => Model.Price)
         </td>
         <td>
-            @Html.TextBoxFor(modelItem => Model.Operation)
+            @Html.DropDownListFor(modelItem => modelItem.Operation, (IEnumerable<SelectListItem>)ViewData["Operations"], new { @Id = "Operation", @Style = "Width: 150px" })
         </td>
         <td>
-            <input type="submit" value="Create Order" />
+            <button id="CreateOrderBtn" onclick="onclickevent(this)">Create Order</button>
+
+            @*<input type="submit" value="Create Order" />*@
         </td>
     </tr>
 }

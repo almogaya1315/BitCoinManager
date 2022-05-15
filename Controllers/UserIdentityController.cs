@@ -28,7 +28,9 @@ namespace BitCoinManager.Controllers
                 {
                     if (!string.IsNullOrWhiteSpace(user.Email) && !string.IsNullOrWhiteSpace(user.Password))
                     {
-                        loginAttempValid = _repository.ValidateLogin(user);
+                        loginAttempValid = _repository.ValidateLogin(ref user);
+                        userVm.Model.Id = user.Id;
+
                         if (!loginAttempValid)
                         {
                             ViewData.Add("Mesasge_Login", "Login attemp failed. EmaiL OR Password INCORRECT.");
@@ -53,9 +55,24 @@ namespace BitCoinManager.Controllers
             {
                 _logger.LogError(e, $"Error in 'Login'. {e.Message}");
                 ViewData.Add("Mesasge_Login", "Error in user login.");
+                return View(userVm);
             }
 
             return RedirectToAction("MainMenu", "Orders", userVm);
+        }
+
+        public IActionResult LogOut()
+        {
+            try
+            {
+                _session.GetUserFromCookies(out UserViewModel userVm);
+                return View("Login", userVm);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, $"Error in 'Login'. {e.Message}");
+                return RedirectToAction("Error", "Home", new { Message = e.Message });
+            }
         }
 
         public IActionResult CreateUser(UserViewModel userVm)
@@ -67,11 +84,11 @@ namespace BitCoinManager.Controllers
 
                 if (!userVm.Init)
                 {
-                    if (!string.IsNullOrWhiteSpace(user.Email))
-                    {
-                        if (!Regex.IsMatch(user.Email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"))
-                            ViewData.Add("Message_Email", "Email not in correct format");
-                    }
+                    //if (!string.IsNullOrWhiteSpace(user.Email))
+                    //{
+                    //    if (!Regex.IsMatch(user.Email, @"^([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$"))
+                    //        ViewData.Add("Message_Email", "Email not in correct format");
+                    //}
                     if (!string.IsNullOrWhiteSpace(user.Password))
                     {
                         var passChars = user.Password.ToList();

@@ -2,3 +2,13 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+function onclickevent(elem) {
+    $.ajax({
+        url: "OrdersController/CreateOrder",
+        data: elem,
+        error: function (result) {
+            alert(result.responseText)
+        }
+    });
+}

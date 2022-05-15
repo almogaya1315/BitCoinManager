@@ -19,6 +19,12 @@ namespace BitCoinManager.Models
             _user = user;
         }
 
+        public int Id
+        {
+            get { return _user.Id; }
+            set { _user.Id = value; }
+        }
+
         public string Email
         {
             get { return _user.Email; }

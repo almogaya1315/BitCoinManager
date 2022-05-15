@@ -28,16 +28,16 @@
         {
             <tr>
                 <td>
-                    @Html.TextBoxFor(modelItem => item.Model.Id, new { @id = "id-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
+                    @Html.DisplayFor(modelItem => item.Model.Id, new { @id = "id-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
                 </td>
                 <td>
-                    @Html.TextBoxFor(modelItem => item.Amount, new { @id = "amount-" + item.Amount + "-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
+                    @Html.DisplayFor(modelItem => item.Amount, new { @id = "amount-" + item.Amount + "-" + item.Model.Id, @Style = "border: 0, 0; border-width:0 0; readonly: true" })
                 </td>
                 <td>
-                    @Html.TextBoxFor(modelItem => item.Price, new { @id = "price-" + item.Price + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
+                    @Html.DisplayFor(modelItem => item.Price, new { @id = "price-" + item.Price + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
                 </td>
                 <td>
-                    @Html.TextBoxFor(modelItem => item.Operation, new { @id = "operation-" + item.Operation + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
+                    @Html.DisplayFor(modelItem => item.Operation, new { @id = "operation-" + item.Operation + "-" + item.Model.Id, @style = "border: 0, 0; border-width:0 0; readonly: true" })
                 </td>
             </tr>
         }
@@ -47,6 +47,3 @@
     </tbody>
 </table>
 
-<div id="update-all" style="text-align:right; margin-right:50px; display:none">
-    @Html.ActionLink("Update All", "UpdateAll", "Orders")
-</div>

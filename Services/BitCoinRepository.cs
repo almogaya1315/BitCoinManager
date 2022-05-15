@@ -15,9 +15,10 @@ namespace BitCoinManager.Services
             _repositoryClient = repositoryClient;
         }
 
-        public bool ValidateLogin(User user)
+        public bool ValidateLogin(ref User user)
         {
-            user = Task.Run(async () => await _repositoryClient.GetuserAsync(user, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
+            var user_ = user;
+            user = Task.Run(async () => await _repositoryClient.GetuserAsync(user_, System.Threading.CancellationToken.None)).GetAwaiter().GetResult();
             return user.Id > 0;
         }
 

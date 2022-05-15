@@ -225,7 +225,7 @@ namespace BitCoinManager.Services
 
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public System.Threading.Tasks.Task<int> CreateorderAsync(int userId, Order body)
+        public System.Threading.Tasks.Task<int> CreateorderAsync(int? userId, Order body)
         {
             return CreateorderAsync(userId, body, System.Threading.CancellationToken.None);
         }
@@ -233,17 +233,21 @@ namespace BitCoinManager.Services
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public async System.Threading.Tasks.Task<int> CreateorderAsync(int userId, Order body, System.Threading.CancellationToken cancellationToken)
+        public async System.Threading.Tasks.Task<int> CreateorderAsync(int? userId, Order body, System.Threading.CancellationToken cancellationToken)
         {
-            if (userId == null)
+            if (userId == null || userId == 0)
                 throw new System.ArgumentNullException("userId");
 
             if (body == null)
                 throw new System.ArgumentNullException("body");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/BitCoinRepository/createorder");
-            urlBuilder_.Replace("{userId}", System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture)));
+            urlBuilder_.Append(BaseUrl != null ? BaseUrl.TrimEnd('/') : "").Append("/BitCoinRepository/createorder?");
+            if (userId != null)
+            {
+                urlBuilder_.Append(System.Uri.EscapeDataString("userId") + "=").Append(System.Uri.EscapeDataString(ConvertToString(userId, System.Globalization.CultureInfo.InvariantCulture))).Append("&");
+            }
+            urlBuilder_.Length--;
 
             var client_ = _httpClient;
             var disposeClient_ = false;

@@ -15,7 +15,7 @@ namespace BitCoinManager.Services
         void Set(SessionKey key, object obj);
 
         bool GetUserFromCookies(out UserViewModel user);
-        void SetUserInCookies(string user);
+        void SetUserInCookies(string userJson);
     }
 
     public class SessionHandler : ISessionHandler
@@ -29,7 +29,7 @@ namespace BitCoinManager.Services
 
         private string JsonValue(SessionKey key)
         {
-            return _contextAccessor.HttpContext.Session.GetString(key.ToString()); ;
+            return _contextAccessor.HttpContext.Session.GetString(key.ToString());
         }
 
         private string JsonValue(string user)
@@ -54,9 +54,9 @@ namespace BitCoinManager.Services
             return userVm != null;
         }
 
-        public void SetUserInCookies(string user)
+        public void SetUserInCookies(string userJson)
         {
-            _contextAccessor.HttpContext.Request.Cookies.Append(new KeyValuePair<string, string>("user", user));
+            _contextAccessor.HttpContext.Response.Cookies.Append("user", userJson);
         }
     }
 
@@ -64,5 +64,6 @@ namespace BitCoinManager.Services
     {
         user,
         order,
+        operations
     }
 }
